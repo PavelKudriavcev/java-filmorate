@@ -5,21 +5,23 @@ import lombok.Data;
 import java.time.LocalDate;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
-import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Film {
-    @NonNull
     private int id;
-    @NonNull
+    @NotBlank
     private String name;
-    @NonNull
+    @Length(max = 200)
     private String description;
-    @NonNull
+    @NotNull
     private LocalDate releaseDate;
-    @NonNull
+    @Positive
     private int duration;
 }
