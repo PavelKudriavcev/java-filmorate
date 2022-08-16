@@ -21,7 +21,7 @@ import java.util.Map;
 public class FilmController {
 
     private Map<Integer, Film> films = new HashMap<>();
-    private int filmsId = 0;
+    private int filmsId = 1;
     private final LocalDate FILM_RELIES = LocalDate.of(1895, 12, 28);
 
     void isValidFilm(Film film) {
