@@ -32,8 +32,8 @@ public class UserController {
     public User createUser(@RequestBody @Valid User addUser) {
         log.debug("создание пользователя");
         isValidUser(addUser);
-        usersId++;
         addUser.setId(usersId);
+        usersId++;
         users.put(addUser.getId(), addUser);
         return addUser;
     }

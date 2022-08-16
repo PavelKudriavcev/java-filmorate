@@ -34,8 +34,8 @@ public class FilmController {
     public Film createFilm(@RequestBody @Valid Film addFilm) {
         log.debug("добавление фильма");
         isValidFilm(addFilm);
-        filmsId++;
         addFilm.setId(filmsId);
+        filmsId++;
         films.put(addFilm.getId(), addFilm);
         return addFilm;
     }
