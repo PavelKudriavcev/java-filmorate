@@ -55,10 +55,10 @@ public class InMemoryFilmStorage implements FilmStorage {
         updateFilm(film);
     }
 
-    public void deleteLike(int filmId, int userId) {
-        Film film = getFilmById(filmId);
-        film.getLikes().remove(userId);
-        updateFilm(film);
+   public void deleteLike(int filmId, User user) {
+       Film film = getFilmById(filmId);
+       film.getLikes().remove(user.getId());
+       updateFilm(film);
     }
 
     public Set<Film> popularFilms(int count) {

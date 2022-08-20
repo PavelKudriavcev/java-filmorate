@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.User;
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
@@ -24,6 +25,6 @@ public interface FilmStorage {
     Film getFilmById(int id);
 
     void addLike(int filmId, int userId);
-    void deleteLike(int filmId, int userId);
+    void deleteLike(int filmId, User user);
     public Set<Film> popularFilms(int count);
 }

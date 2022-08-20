@@ -49,7 +49,8 @@ public class FilmService {
 
     //удалить like
     public void deleteLike(int filmId, int userId) {
-        filmStorage.deleteLike(filmId, userId);
+        User user = userStorage.getUserById(userId);
+        filmStorage.deleteLike(filmId, user);
     }
 
     //получить список Топ-10 фильмов
