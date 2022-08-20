@@ -1,16 +1,10 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import ru.yandex.practicum.filmorate.controller.NotFoundObjectException;
-import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.controller.Exceptions.NotFoundObjectException;
 import ru.yandex.practicum.filmorate.model.User;
-
 import javax.validation.Valid;
-import javax.validation.ValidationException;
 import java.util.*;
 
 @Component

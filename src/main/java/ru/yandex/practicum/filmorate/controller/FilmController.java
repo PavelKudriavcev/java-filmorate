@@ -7,7 +7,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.service.UserService;
 
 
 import javax.validation.Valid;
@@ -34,6 +33,7 @@ public class FilmController {
             throw new ValidationException("дата релиза — не раньше 28 декабря 1895 года");
         }
     }
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public Film createFilm(@RequestBody @Valid Film addFilm) {
@@ -56,26 +56,26 @@ public class FilmController {
         log.debug("получение всех фильмов");
         return filmService.getFilms();
     }
+
     @GetMapping("/{id}")
-    public Film getFilmById(@PathVariable int id){
+    public Film getFilmById(@PathVariable int id) {
         log.debug("получение фильма по ID");
         return filmService.getFilmById(id);
     }
-    //поставить like от пользователя по id
+
+
     @PutMapping("/{id}/like/{userId}")
     public void addLike(@PathVariable int id, @PathVariable int userId) {
         log.debug("пользователь ставит лайк фильму");
         filmService.addLike(id, userId);
     }
 
-    //удалить like от пользователя по id
     @DeleteMapping("/{id}/like/{userId}")
     public void deleteLike(@PathVariable int id, @PathVariable int userId) {
         log.debug("пользователь удаляет лайк");
         filmService.deleteLike(id, userId);
     }
 
-    //получить список из 10-Топ фильмов
     @GetMapping("/popular")
     public Set<Film> popularFilms(@RequestParam(defaultValue = "10") int count) {
         log.debug("возвращает список из первых count фильмов по количеству лайков");

@@ -10,7 +10,6 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -53,7 +52,6 @@ public class UserService {
         userStorage.deleteFriend(userId, friendId);
     }
 
-    //получить список друзей пользователя
     public List<User> usersFriends(int id) {
         User user = getUserById(id);
         List<User> userFriends = new ArrayList<>();
@@ -62,7 +60,6 @@ public class UserService {
         return userStorage.usersFriends(id);
     }
 
-    //получить список общих друзей пользователя
     public List<User> commonFriends(int idUser, int idOther) {
         return userStorage.commonFriends(idUser, idOther);
     }
