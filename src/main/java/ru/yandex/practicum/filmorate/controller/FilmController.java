@@ -3,12 +3,10 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.service.UserService;
 
 
 import javax.validation.Valid;
@@ -81,7 +79,7 @@ public class FilmController {
 
     //получить список из 10-Топ фильмов
     @GetMapping("/popular")
-    public Set<Film> popularFilms(@RequestParam(defaultValue = "10")  @Positive int count) {
+    public Set<Film> popularFilms(@RequestParam(defaultValue = "10") @Positive int count) {
         log.debug("возвращает список из первых count фильмов по количеству лайков");
         return filmService.popularFilms(count);
     }
