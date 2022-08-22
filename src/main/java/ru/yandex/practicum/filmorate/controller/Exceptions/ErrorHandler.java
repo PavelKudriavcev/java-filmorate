@@ -5,12 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import ru.yandex.practicum.filmorate.controller.*;
 
-
+import javax.validation.ConstraintViolationException;
 import java.util.Map;
 
-@RestControllerAdvice(assignableTypes = {FilmController.class, UserController.class})
+@RestControllerAdvice
 @Slf4j
 public class ErrorHandler {
     @ExceptionHandler
@@ -36,5 +35,16 @@ public class ErrorHandler {
                 Map.of("Please, attention ", a.getMessage()),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
-}
 
+    @ExceptionHandler
+    public ResponseEntity<String> exc(ConstraintViolationException ex) {
+        log.info(ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Throwable.class)
+    public ResponseEntity<String> handleThrowable(final Throwable ex) {
+        log.info(ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}

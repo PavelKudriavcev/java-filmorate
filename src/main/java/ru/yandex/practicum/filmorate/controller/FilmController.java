@@ -3,14 +3,17 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
 
 
 import javax.validation.Valid;
 import javax.validation.ValidationException;
+import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -20,8 +23,8 @@ import java.util.*;
 @RequestMapping("/films")
 public class FilmController {
     private final LocalDate FILM_RELIES = LocalDate.of(1895, 12, 28);
-    private int filmsId = 1;
-    FilmService filmService;
+
+    private final FilmService filmService;
 
     @Autowired
     public FilmController(FilmService filmService) {
@@ -39,8 +42,6 @@ public class FilmController {
     public Film createFilm(@RequestBody @Valid Film addFilm) {
         log.debug("добавление фильма");
         isValidFilm(addFilm);
-        addFilm.setId(filmsId);
-        filmsId++;
         return filmService.createFilm(addFilm);
     }
 
@@ -62,6 +63,7 @@ public class FilmController {
         log.debug("получение фильма по ID");
         return filmService.getFilmById(id);
     }
+    //поставить like от пользователя по id
 
 
     @PutMapping("/{id}/like/{userId}")
@@ -70,14 +72,16 @@ public class FilmController {
         filmService.addLike(id, userId);
     }
 
+    //удалить like от пользователя по id
     @DeleteMapping("/{id}/like/{userId}")
     public void deleteLike(@PathVariable int id, @PathVariable int userId) {
         log.debug("пользователь удаляет лайк");
         filmService.deleteLike(id, userId);
     }
 
+    //получить список из 10-Топ фильмов
     @GetMapping("/popular")
-    public Set<Film> popularFilms(@RequestParam(defaultValue = "10") int count) {
+    public Set<Film> popularFilms(@RequestParam(defaultValue = "10")  @Positive int count) {
         log.debug("возвращает список из первых count фильмов по количеству лайков");
         return filmService.popularFilms(count);
     }

@@ -1,24 +1,27 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 
 import javax.validation.Valid;
+import javax.validation.ValidationException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Slf4j
 @Validated
 @RequestMapping("/users")
 public class UserController {
-    UserService userService;
-    private int usersId = 1;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -35,7 +38,6 @@ public class UserController {
     public User createUser(@RequestBody @Valid User addUser) {
         log.debug("создание пользователя");
         isValidUser(addUser);
-        addUser.setId(usersId++);
         return userService.createUser(addUser);
     }
 
@@ -78,12 +80,9 @@ public class UserController {
         return userService.usersFriends(id);
     }
 
-
     @GetMapping("/{id}/friends/common/{otherId}")
     public List<User> commonFriend(@PathVariable int id, @PathVariable int otherId) {
         log.debug("список друзей, общих с другим пользователем");
         return userService.commonFriends(id, otherId);
     }
-
 }
-
