@@ -5,6 +5,7 @@ import ru.yandex.practicum.filmorate.controller.Exceptions.NotFoundObjectExcepti
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
@@ -65,16 +66,9 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     public List<User> commonFriends(int idUser1, int idUser2) {
-        List<User> commonFriends = new ArrayList<>();
         User user1 = getUserById(idUser1);
         User user2 = getUserById(idUser2);
-        Set<Integer> user1Friends = user1.getFriends();
         Set<Integer> user2Friends = user2.getFriends();
-        for (int userid : user1Friends) {
-            if (user2Friends.contains(userid)) {
-                commonFriends.add(users.get(userid));
-            }
-        }
-        return commonFriends;
+        return user1.getFriends().stream().filter(user2Friends::contains).map(this::getUserById).collect(Collectors.toList());
     }
 }
