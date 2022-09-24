@@ -1,38 +1,38 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import ru.yandex.practicum.filmorate.controller.Exceptions.NotFoundObjectException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.utils.IdGenerator;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Component
 @Slf4j
+@Data
 public class InMemoryFilmStorage implements FilmStorage {
     private Map<Integer, Film> films = new HashMap<>();
-    private int filmsId = 1;
+
 
     @Override
     public Film createFilm(Film addFilm) {
-        addFilm.setId(filmsId);
-        filmsId++;
+       /* addFilm.setId(filmsId);
+        filmsId++;*/
+        if (addFilm.getId() == 0) {
+            addFilm.setId(IdGenerator.nextFilmId());
+        }
         films.put(addFilm.getId(), addFilm);
         return addFilm;
     }
 
     @Override
     public Film updateFilm(Film newFilm) {
-        if (!films.containsKey(newFilm.getId())) {
-            throw new NotFoundObjectException("Такого фильма нет");
-        } else {
-            films.put(newFilm.getId(), newFilm);
-            return newFilm;
-        }
+        final Film oldFilm = getFilmById(newFilm.getId());
+        if (oldFilm.equals(newFilm)) return newFilm;
+        return newFilm;
     }
 
     @Override
@@ -42,30 +42,9 @@ public class InMemoryFilmStorage implements FilmStorage {
 
     @Override
     public Film getFilmById(int id) {
-        if (!films.containsKey(id)) {
-            throw new NotFoundObjectException("Такого фильма нет");
-        } else {
-            return films.get(id);
-        }
+
+        return films.get(id);
+
     }
 
-    public void addLike(int filmId, int userId) {
-        Film film = getFilmById(filmId);
-        film.getLikes().add(userId);
-        updateFilm(film);
-    }
-
-    public void deleteLike(int filmId, User user) {
-        Film film = getFilmById(filmId);
-        film.getLikes().remove(user.getId());
-        updateFilm(film);
-    }
-
-    public Set<Film> popularFilms(int count) {
-        List<Film> films = getFilms();
-        return films.stream()
-                .sorted(Comparator.comparingInt(Film::getCountLike).reversed())
-                .limit(count)
-                .collect(Collectors.toSet());
-    }
 }

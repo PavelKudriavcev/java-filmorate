@@ -1,33 +1,15 @@
 package ru.yandex.practicum.filmorate.storage;
 
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.controller.Exceptions.NotFoundObjectException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.utils.IdGenerator;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 public class InMemoryUserStorage implements UserStorage {
     private Map<Integer, User> users = new HashMap<>();
-    private int usersId = 1;
 
-    @Override
-    public User createUser(User addUser) {
-        addUser.setId(usersId++);
-        users.put(addUser.getId(), addUser);
-        return addUser;
-    }
-
-    @Override
-    public User updateUser(User addUser) {
-        if (users.containsKey(addUser.getId())) {
-            users.put(addUser.getId(), addUser);
-            return addUser;
-        } else {
-            throw new NotFoundObjectException("Такого пользователя нет");
-        }
-    }
 
     @Override
     public List<User> getUsers() {
@@ -35,40 +17,39 @@ public class InMemoryUserStorage implements UserStorage {
     }
 
     @Override
-    public User getUserById(int id) {
-        if (!users.containsKey(id)) {
-            throw new NotFoundObjectException("Такого опльзователя нет");
+    public User getById(int id) {
+        return users.get(id);
+    }
+
+    @Override
+    public User createUser(User user) {
+        /*if (user.getName() == null || user.getName().isBlank() || user.getName().isEmpty()) {
+            user.setName(user.getLogin());
+        }
+        user.setId(IdGenerator.nextUserId());
+        users.put(user.getId(), user);
+        return users.get(user.getId());*/
+        if (user.getName() == null || user.getName().isBlank() || user.getName().isEmpty()) {
+            user.setName(user.getLogin());
+        }
+        if (user.getId() == 0) {
+            user.setId(IdGenerator.nextUserId());
+        }
+        users.put(user.getId(), user);
+        return users.get(user.getId());
+    }
+
+    @Override
+    public User updateUser(User user) {
+        if (user.getName() == null || user.getName().isBlank() || user.getName().isEmpty()) {
+            user.setName(user.getLogin());
+        }
+
+        if (!users.containsKey(user.getId()) && user.getId() >= 1) {
+            users.put(user.getId(), user);
         } else {
-            return users.get(id);
+            users.put(user.getId(), user);
         }
-    }
-
-    @Override
-    public void addFriend(int userId, int friendId) {
-        getUserById(userId).getFriends().add(getUserById(friendId).getId());
-        getUserById(friendId).getFriends().add(userId);
-    }
-
-    @Override
-    public void deleteFriend(int userId, int friendId) {
-        getUserById(userId).getFriends().add(getUserById(friendId).getId());
-        getUserById(friendId).getFriends().add(userId);
-    }
-
-    @Override
-    public List<User> usersFriends(int id) {
-        User user = getUserById(id);
-        List<User> usersFriends = new ArrayList<>();
-        for (int friendId : user.getFriends()) {
-            usersFriends.add(users.get(friendId));
-        }
-        return usersFriends;
-    }
-
-    public List<User> commonFriends(int idUser1, int idUser2) {
-        User user1 = getUserById(idUser1);
-        User user2 = getUserById(idUser2);
-        Set<Integer> user2Friends = user2.getFriends();
-        return user1.getFriends().stream().filter(user2Friends::contains).map(this::getUserById).collect(Collectors.toList());
+        return users.get(user.getId());
     }
 }
